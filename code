@@ -1,0 +1,20 @@
+from sentence_transformers import SentenceTransformer, util
+import numpy as np
+model = SentenceTransformer('allenai-specter')
+
+paper_embeddings = np.load('output.npy')
+query = "Research on neural networks"
+query_embedding = model.encode(query, convert_to_tensor=True)
+
+# Perform semantic search
+similarities = util.semantic_search(query_embedding, paper_embeddings, top_k=3)
+
+# Retrieve top 3 results
+top_results = similarities[0]
+
+# Display the top 3 papers
+for result in top_results:
+    paper_index = result['corpus_id']
+    score = result['score']
+    print(f"Paper Index: {paper_index}, Score: {score}")
+    # You can fetch and display paper details based on index
